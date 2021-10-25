@@ -1,0 +1,24 @@
+lesson 4 : PING
+           ansible -i invertory_file -m ping --ask-become-pass
+
+lesson 5 : use basic ansible command
+           - ansible all -m apt -a name=vim-nox --become --ask-become-pass
+             #installa vim-nox chiedendo la password (comune per tutti i server)
+
+
+lesson 6 : create a first playbook which will install apache2 in all the server in the invetory
+           comando:
+           ansible-playbook --ask-become-pass install_apache.yml 
+           il file usa il parametro 
+            state = latest
+               in questo modo posso lanciare lo stesso playbook per aggiornare apache2 
+               all'ultima versione
+            state = absent
+               permette di rimuovere il package
+
+lesson 7 :
+
+lesson 8 :
+
+FEDORA open port by command line
+firewall-cmd  --add-port=80/tcp
