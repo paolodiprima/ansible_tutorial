@@ -47,6 +47,14 @@ lesson 10: use of tags
                ansible-playbook --list-tags sites.yml
            to run one tag
                ansible-playbook --tags nometag --ask-become-pass 
+lesson 11: copy files
+           - creare directory files 
+           - definire un file di prova dentro la dir files
+             ad esempio una pagina html 
+           - usare il task copy
+           - specificare:  src, dest, owner, group e nome file
+           NB: non e' necessario specificare il cammino del file sorgente
+               perche' la dir files viene considerata come default da ansible
 
 FEDORA open port by command line
 firewall-cmd  --add-port=80/tcp
