@@ -4,29 +4,11 @@
   become: true
   tasks:
 
-  - name: update repository index
-    apt:
-      update_cache: yes
-    when: ansible_distribution in ['Ubuntu','SparkyLinux'] 
-
-  - name: install the apache2 and php  package
-    apt:
+  - name: install the apache and php  package
+    package:
       name: 
-        - apache2
-        - libapache2-mod-php  
+        - "{{ apache_package }}"
+        - "{{ php_package }}"   
       state: latest
-    when: ansible_distribution in ['Ubuntu','SparkyLinux']
-
-
-  - name: update repository index
-    dnf:
       update_cache: yes
-    when: ansible_distribution in ['Fedora'] 
 
-  - name: install the apache2 and php package
-    dnf:
-      name: 
-        - httpd
-        - php  
-      state: latest
-    when: ansible_distribution in ['Fedora']

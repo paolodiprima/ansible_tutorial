@@ -15,10 +15,38 @@ lesson 6 : create a first playbook which will install apache2 in all the server 
                all'ultima versione
             state = absent
                permette di rimuovere il package
+               
+           CENTOS: init apache
+                   - sudo systemctl start httpd
+                   - sudo systemctl enable httpd
+                   - sudo firewall-cmd --add-port=80/tcp
 
-lesson 7 :
+lesson 7 : refactoring of playbook
+           -apt add update_cache = yes as an option
+           -use of variable and have only one play that do the installation 
+            for different distribution
+           -use of "package" as general package manager of ansible for different distry
 
-lesson 8 :
+lesson 8 : cambio codice ed ottimizzazione 
+           uso di variabili
+           
+           nel file invetory: a fianco l'IP
+             192.168.0.0 apache_package=apache2
+           nel file ym;
+           apt:
+             name: 
+               - "{{ apache_package }}"
+
+lesson 9 : use of group in order to execute different tast
+           based on the group
+
+lesson 10: use of tags
+           after task name
+               tags: nome_tag
+           to see list of tags
+               ansible-playbook --list-tags sites.yml
+           to run one tag
+               ansible-playbook --tags nometag --ask-become-pass 
 
 FEDORA open port by command line
 firewall-cmd  --add-port=80/tcp
