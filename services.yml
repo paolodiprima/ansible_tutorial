@@ -1,0 +1,94 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: install updates (centOS)
+    tags: always
+    dnf:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution in ['Fedora']
+
+  - name: install updates (Lubuntu, Sparky)
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution in ['Ubuntu','SparkyLinux']
+
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+  - name: install the apache and php  package
+    tags: apache,apache2,ubuntu 
+    apt:
+      name: 
+        - apache2 
+        - libapache2-mod-php   
+      state: latest
+    when: ansible_distribution in ['Ubuntu','SparkyLinux']
+
+  - name: install apache and php in fedora
+    tags: apache,centOS,httpd
+    dnf: 
+      name: 
+       - httpd
+       - php
+      state: latest
+    when: ansible_distribution in ['Fedora']
+
+  - name: start httpd (Fedora)
+    tags: apache,centos,httpd
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+    when: ansible_distribution in ['Fedora']
+
+  - name: change e-mail address of admin
+    tags: apache,centos,httpd
+    lineinfile: 
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin qualcuno@somewhere.net
+    when: ansible_distribution in ['Fedora']
+    register: httpd
+
+  - name: restart httpd (Fedora)
+    tags: apache,centos,httpd
+    service:
+      name: httpd
+      state: restarted
+    when: httpd.changed
+
+
+  - name: copy default html file for site
+    tags: apache,apache2,ubuntu
+    copy: 
+      src: default_site.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode:  0644
+
+- hosts: db_servers
+  become: true
+  tasks:
+    
+  - name: install maridb package (CentoOS)
+    tags: centOS,db,mariadb
+    dnf:
+      name: mariadb
+      state: latest
+    when: ansible_distribution in ['Fedora']
+
+  - name: install mariadb package (lubuntu, sparkylinux)
+    tags: ubuntu,db,mariadb
+    apt:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution in ['Ubuntu','SparkyLinux']    

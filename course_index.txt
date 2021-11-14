@@ -55,6 +55,38 @@ lesson 11: copy files
            - specificare:  src, dest, owner, group e nome file
            NB: non e' necessario specificare il cammino del file sorgente
                perche' la dir files viene considerata come default da ansible
+               
+               
+lesson 12: start service
+           in CentOS/Fedora httpd is not automatically started after installation.
+           We add a play that will start the service and  set the service in "enabled"
+           
+             - name: start httpd (Fedora)
+                tags: apache,centos,httpd
+                service:
+                    name: httpd
+                    state: started
+                    enabled: yes
+                when: ansible_distribution in ['Fedora']
+           
+           test to change a configuration in service httpd and restart the service if config is changed:
+        
+              - name: change e-mail address of admin
+                tags: apache,centos,httpd
+                lineinfile: 
+                  path: /etc/httpd/conf/httpd.conf
+                  regexp: '^ServerAdmin'
+                  line: ServerAdmin qualcuno@somewhere.net
+                when: ansible_distribution in ['Fedora']
+                register: httpd
+
+              - name: restart httpd (Fedora)
+                tags: apache,centos,httpd
+                service:
+                  name: httpd
+                  state: restarted
+                when: httpd.changed
+                
 
 FEDORA open port by command line
 firewall-cmd  --add-port=80/tcp
