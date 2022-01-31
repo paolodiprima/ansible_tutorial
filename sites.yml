@@ -41,6 +41,14 @@
       state: latest
     when: ansible_distribution in ['Fedora']
 
+  - name: start httpd (Fedora)
+    tags: apache,fedora,httpd
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+    when: ansible_distribution in ['Fedora']   
+
   - name: copy default html file for site
     tags: apache,apache2,ubuntu
     copy: 

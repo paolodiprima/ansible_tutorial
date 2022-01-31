@@ -4,20 +4,33 @@
   become: true
   pre_tasks:
 
-  - name: install updates (centOS)
+  - name: update repo cache (centOS)
     tags: always
     dnf:
-      update_only: yes
+#    update_only: yes -> done in bootstrap
       update_cache: yes
+    changed_when: false
     when: ansible_distribution in ['Fedora']
 
-  - name: install updates (Lubuntu, Sparky)
+  - name: update repo cache (Lubuntu, Sparky)
     tags: always
     apt:
-      upgrade: dist
+#    upgrade: dist -> done in bootstrap
       update_cache: yes
+    changed_when: false
     when: ansible_distribution in ['Ubuntu','SparkyLinux']
 
+- hosts: all
+  become: true
+  tasks:
+      
+  - name: add ssh key for simona
+    tags: always
+    authorized_key: 
+      user: simona
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILE2ir7LNVmxR7bPKOUAFdcwknQ0s5yERk42g6yctDh9 ansible"
+  
+  
 
 - hosts: web_servers
   become: true

@@ -86,7 +86,40 @@ lesson 12: start service
                   name: httpd
                   state: restarted
                 when: httpd.changed
-                
+
+ ---------------------------------
+ 
+lesson 13 : adding users
+            - add user as root, add it in sudo group, add ansible key to automatic use ansible
+            code:
+            tasks:
+              - name: create simona user
+                tags: always
+                user: 
+                  name: simona
+                  group: root
+                  
+              - name: add ssh key for simona
+                tags: always
+                authorized_key: 
+                  user: simona
+                  key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILE2ir7LNVmxR7bPKOUAFdcwknQ0s5yERk42g6yctDh9 ansible"
+              
+              - name: add sudoers file for simona
+                tags: always
+                copy:
+                  src: sudoer_simona
+                  dest: /etc/sudoers.d/simona
+                  owner: root
+                  group: root
+                  mode: 0440
+            
+            - creazione bootstrap.yml in order to create user simona that will allow to use ansible wihout
+              the need to insert a password.
+            
+            - use of "changed_when: false"  that will not show a change for each update
+
+          
 
 FEDORA open port by command line
 firewall-cmd  --add-port=80/tcp

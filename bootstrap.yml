@@ -1,0 +1,45 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: install updates (centOS)
+    tags: always
+    dnf:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution in ['Fedora']
+
+  - name: install updates (Lubuntu, Sparky)
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution in ['Ubuntu','SparkyLinux']
+
+- hosts: all
+  become: true
+  tasks:
+  - name: create simona user
+    tags: always
+    user: 
+      name: simona
+      group: root
+      
+  - name: add ssh key for simona
+    tags: always
+    authorized_key: 
+      user: simona
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILE2ir7LNVmxR7bPKOUAFdcwknQ0s5yERk42g6yctDh9 ansible"
+  
+  - name: add sudoers file for simona
+    tags: always
+    copy:
+      src: sudoer_simona
+      dest: /etc/sudoers.d/simona
+      owner: root
+      group: root
+      mode: 0440
+    
+
